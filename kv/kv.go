@@ -18,8 +18,8 @@ func Get[T any, K comparable](data map[K]any, key K) T {
 }
 
 // MustGet must get value map and convert it to target type T
-// if key is not found in the given map, an [UndefinedIndexException] will be raised
-// if value can't be converted to type T, a [TypeException] will be raised
+// if key is not found in the given map, an [exception.UndefinedIndexException] will be raised
+// if value can't be converted to type T, a [exception.TypeException] will be raised
 func MustGet[T any, K comparable](data map[K]any, key K) T {
 	if value, err := GetE[T](data, key); err != nil {
 		panic(err)
@@ -29,8 +29,8 @@ func MustGet[T any, K comparable](data map[K]any, key K) T {
 }
 
 // GetE get value from map and convert it to target type T
-// if key is not found in the given map, the zero value of type T and an [UndefinedIndexException] will be returned
-// if value can not be converted to type T, the zero value of type T and a [TypeException] will be returned
+// if key is not found in the given map, the zero value of type T and an [exception.UndefinedIndexException] will be returned
+// if value can not be converted to type T, the zero value of type T and a [exception.TypeException] will be returned
 func GetE[T any, K comparable](data map[K]any, key K) (T, error) {
 	value, ok := data[key]
 	if !ok {
@@ -99,7 +99,7 @@ func GetE[T any, K comparable](data map[K]any, key K) (T, error) {
 		v, err := cast.ToStringSliceE(value)
 		return convert(v), err
 	case []bool:
-		v, err := cast.ToBoolE(value)
+		v, err := cast.ToBoolSliceE(value)
 		return convert(v), err
 	case []time.Duration:
 		v, err := cast.ToDurationSliceE(value)

@@ -6,15 +6,16 @@ import (
 	"github.com/gopi-frame/exception"
 )
 
-type catcher struct {
+// Catcher is used to run function and catch exceptions.
+type Catcher struct {
 	fn           func()
 	catches      map[reflect.Type]func(error)
 	defaultCatch func(error)
 	final        func()
 }
 
-// Catch set exception catcher
-func (c *catcher) Catch(e error, fn func(error)) *catcher {
+// Catch sets a function to catch a specific error.
+func (c *Catcher) Catch(e error, fn func(error)) *Catcher {
 	typ := reflect.TypeOf(e)
 	if _, ok := c.catches[typ]; !ok {
 		c.catches[typ] = fn
@@ -22,20 +23,20 @@ func (c *catcher) Catch(e error, fn func(error)) *catcher {
 	return c
 }
 
-// CatchAll set default exception catcher
-func (c *catcher) CatchAll(fn func(error)) *catcher {
+// CatchAll sets a function to catch all errors.
+func (c *Catcher) CatchAll(fn func(error)) *Catcher {
 	c.defaultCatch = fn
 	return c
 }
 
-// Finally finally
-func (c *catcher) Finally(fn func()) *catcher {
+// Finally sets final function which will always be called at the end.
+func (c *Catcher) Finally(fn func()) *Catcher {
 	c.final = fn
 	return c
 }
 
-// Run run
-func (c *catcher) Run() {
+// Run runs the function and catches exceptions.
+func (c *Catcher) Run() {
 	defer func() {
 		if c.final != nil {
 			defer c.final()
@@ -62,9 +63,9 @@ func (c *catcher) Run() {
 	c.fn()
 }
 
-// Try try catch
-func Try(fn func()) *catcher {
-	t := new(catcher)
+// Try creates a new [Catcher] to hold the given function.
+func Try(fn func()) *Catcher {
+	t := new(Catcher)
 	t.fn = fn
 	t.catches = make(map[reflect.Type]func(error))
 	return t
