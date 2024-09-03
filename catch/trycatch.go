@@ -14,7 +14,7 @@ type Catcher struct {
 	final        func()
 }
 
-// Catch sets a function to catch a specific error.
+// Catch sets a function to catch a specific exception.
 func (c *Catcher) Catch(e error, fn func(error)) *Catcher {
 	typ := reflect.TypeOf(e)
 	if _, ok := c.catches[typ]; !ok {
